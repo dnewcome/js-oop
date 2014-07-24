@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.14.0.css">
+</head>
+<body>
+    <div id='qunit'></div>
+    <div id='qunit-fixture'></div>
+    <script src='http://code.jquery.com/qunit/qunit-1.14.0.js'></script>
+    <script src='oop.js'></script>
+
+    <script>
+
+        QUnit.module("suite", {
+            setup: function() {},
+            teardown: function() {}
+        });
+
+        QUnit.test('simple base class', function(assert) {
+            var base = {
+                method: function() {
+                    return 'base';
+                }
+            };
+            var derived = {
+                method: function() {
+                    return 'derived';
+                }
+            };
+
+            var mixed = oop(base, derived);
+            assert.ok(mixed.method(), 'derived');
+        });
+
+        QUnit.test('override base class', function(assert) {
+            var base = {
+                method: function() {
+                    return 'base';
+                }
+            };
+            var derived = {
+                method: function() {
+                    return 'derived';
+                }
+            };
+            // set subclass to override base
+            derived.method.override = true;
+
+
+            // safe "upcast" by calling base
+            var upcast = oop(base, derived).base;
+            assert.equal(upcast.method(), 'derived');
+        });
+
+        QUnit.test('call base from derived', function(assert) {
+            var base = {
+                method: function() {
+                    return 'base';
+                }
+            };
+            var derived = {
+                method: function() {
+                    return this.base.method();
+                }
+            };
+
+
+            // safe "upcast" by calling base
+            var mix = oop(base, derived);
+            assert.equal(mix.method(), 'base');
+        });
+
+        QUnit.test('derived class should have method', function(assert) {
+            var base = {
+                base_only: function() {
+                    return 'base';
+                }
+            };
+            var derived = {};
+
+            oop(base, derived);
+            assert.equal(derived.base_only(), 'base');
+        });
+
+        QUnit.test('duck typing check', function(assert) {
+            var clazz = {
+                method: function() {}
+            };
+            var instance = {
+                method: function() {}
+            };
+
+            var actual = duck(clazz, instance);
+            assert.equal(actual, true);
+        });
+
+    </script>
+</body>
+</html>
