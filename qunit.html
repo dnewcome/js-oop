@@ -84,6 +84,19 @@
             assert.equal(derived.base_only(), 'base');
         });
 
+        QUnit.test('instance of derived class should have method', function(assert) {
+            var base = {
+                base_only: function() {
+                    return 'base';
+                }
+            };
+            var derived = {};
+
+            /// use Object.create() for prototypal class instantiation
+            var instance = Object.create(oop(base, derived));
+            assert.equal(instance.base_only(), 'base');
+        });
+
         QUnit.test('duck typing check', function(assert) {
             var clazz = {
                 method: function() {}
